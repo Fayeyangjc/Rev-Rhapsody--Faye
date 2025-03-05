@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Racing Line Simulator</title>
+    <style>
+        body { text-align: center; font-family: Arial, sans-serif; }
+        canvas { border: 2px solid black; background-color: #f0f0f0; }
+    </style>
+</head>
+<body>
+
+    <h2>🏁 Racing Line Simulator 🏎️</h2>
+    <canvas id="racingCanvas" width="800" height="600"></canvas>
+    <p>Drag the car to draw your racing line!</p>
+
+    <script>
+        const canvas = document.getElementById("racingCanvas");
+        const ctx = canvas.getContext("2d");
+
+        let trackImg = new Image();
+        trackImg.src = "pics/截屏2025-03-04 下午6.15.44.png"; // 请替换成你的赛道图片路径
+        let carImg = new Image();
+        carImg.src = "pics/截屏2025-03-04 下午6.08.10.png"; // 你可以换成更好的赛车图标
+
+        let car = { x: 100, y: 100, width: 30, height: 30, dragging: false };
+        let racingPath = [];
+
+        // 加载赛道图片
+        trackImg.onload = function () {
+            ctx.drawImage(trackImg, 0, 0, canvas.width, canvas.height);
+            drawCar();
+        };
+
+        function drawCar() {
+            ctx.drawImage(carImg, car.x - car.width / 2, car.y - car.height / 2, car.width, car.height);
+        }
+
+        // 监听鼠标事件
+        canvas.addEventListener("mousedown", function (e) {
+            const { offsetX, offsetY } = e;
+            if (
+                offsetX > car.x - car.width / 2 &&
+                offsetX < car.x + car.width / 2 &&
+                offsetY > car.y - car.height / 2 &&
+                offsetY < car.y + car.height / 2
+            ) {
+                car.dragging = true;
+                racingPath = []; // 开始新轨迹
+            }
+        });
+
+        canvas.addEventListener("mousemove", function (e) {
+            if (car.dragging) {
+                const { offsetX, offsetY } = e;
+                car.x = offsetX;
+                car.y = offsetY;
+                racingPath.push({ x: offsetX, y: offsetY });
+
+                // 重新绘制
+                ctx.drawImage(trackImg, 0, 0, canvas.width, canvas.height);
+                drawPath();
+                drawCar();
+            }
+        });
+
+        canvas.addEventListener("mouseup", function () {
+            car.dragging = false;
+        });
+
+        function drawPath() {
+            ctx.beginPath();
+            ctx.strokeStyle = "red";
+            ctx.lineWidth = 2;
+            ctx.moveTo(racingPath[0]?.x, racingPath[0]?.y);
+            for (let i = 1; i < racingPath.length; i++) {
+                ctx.lineTo(racingPath[i].x, racingPath[i].y);
+            }
+            ctx.stroke();
+        }
+    </script>
+
+</body>
+</html> 

@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Karting Track Map</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background: url('pics/18781741030758_.pic_hd.jpg') no-repeat center center fixed;
+            background-size: cover;
+            background-color: rgba(0, 0, 0, 0.5);
+            color: #fff;
+            font-family: 'Roboto', sans-serif;
+        }
+        h1 {
+            color: #ff0000;
+            text-shadow: 2px 2px #000;
+            font-size: 2.5em;
+            text-align: center;
+            margin-top: 20px;
+        }
+        #map {
+            height: 600px;
+            width: 100%;
+            border: 2px solid #ff0000;
+            box-shadow: 0 0 10px #ff0000;
+            opacity: 0.8;
+        }
+        nav ul li a {
+            color: #000;
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.3s;
+            position: relative;
+        }
+        nav ul li a:hover,
+        nav ul li a.active {
+            color: #ff0000;
+        }
+        nav ul li a.active::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: -5px;
+            height: 2px;
+            background-color: #ff0000;
+        }
+    </style>
+</head>
+<body>
+    <div style="background-color: #111; padding: 10px 0; text-align: center;">
+        <h1><img src="pics/截屏2025-03-03 下午3.58.06.png" alt="Rev Rhapsody" style="width: 100%; height: auto; max-width: 600px;"></h1>
+        <nav>
+            <ul style="list-style-type: none; display: flex; justify-content: center; padding: 0; margin: 0;">
+                <li style="margin: 0 15px;"><a href="index.html" style="color: #f00; text-decoration: none;">Home</a></li>
+                <li style="margin: 0 15px;"><a href="karting.html" style="color: #f00; text-decoration: none;">Karting</a></li>
+                <li style="margin: 0 15px;"><a href="#f1" style="color: #f00; text-decoration: none;">F1</a></li>
+                <li style="margin: 0 15px;"><a href="#transition" style="color: #f00; text-decoration: none;">Transition</a></li>
+                <li style="margin: 0 15px;"><a href="#news" style="color: #f00; text-decoration: none;">News & Updates</a></li>
+                <li style="margin: 0 15px;"><a href="#contact" style="color: #f00; text-decoration: none;">Contact & Feedback</a></li>
+            </ul>
+        </nav>
+    </div>
+
+    <div style="display: flex;">
+        <div style="width: 200px; background-color: rgba(0, 0, 0, 0.7); padding: 10px;">
+            <ul style="list-style-type: none; padding: 0;">
+                <li style="margin-bottom: 10px;"><a href="#karting-basics" style="color: #fff; text-decoration: none;">🏎️ Karting Basics</a></li>
+                <hr style="border-color: #fff;">
+                <li style="margin-bottom: 10px;"><a href="#karting-techniques" style="color: #fff; text-decoration: none;">🛠️ Karting Techniques for Beginners</a></li>
+                <hr style="border-color: #fff;">
+                <li style="margin-bottom: 10px;"><a href="#pro-karting" style="color: #fff; text-decoration: none;">🔥 Pro Karting Skills</a></li>
+                <hr style="border-color: #fff;">
+                <li style="margin-bottom: 10px;"><a href="#types-of-karting" style="color: #fff; text-decoration: none;">🚗 Types of Karting</a></li>
+                <hr style="border-color: #fff;">
+                <li style="margin-bottom: 10px;"><a href="#karting-strategy" style="color: #fff; text-decoration: none;">🏁 Karting Racing & Strategy</a></li>
+                <hr style="border-color: #fff;">
+                <li style="margin-bottom: 10px;"><a href="#gear-setup" style="color: #fff; text-decoration: none;">🔧 Gear & Setup</a></li>
+                <hr style="border-color: #fff;">
+                <li style="margin-bottom: 10px;"><a href="#community-events" style="color: #fff; text-decoration: none;">💬 Community & Events</a></li>
+            </ul>
+        </div>
+        <div id="map" style="margin-top: 40px; flex-grow: 1;"></div>
+        <div id="karting-basics-content" style="display: none; padding: 20px; background-color: rgba(0, 0, 0, 0.8); color: #fff; flex-grow: 1;">
+            <h2>🏎️ What is Karting? The Origins & Thrill of Go-Kart Racing</h2>
+            <h3 onclick="toggleContent('origins')" style="cursor: pointer;">📜 The Origins of Go-Kart Racing</h3>
+            <div id="origins" style="display: none;">
+                <p>In 1956, an innovative American engineer named Art Ingels built the very first go-kart in California. Ingels, who worked for a racing car company, used scrap metal and a lawnmower engine to create a small but incredibly nimble four-wheeled machine. At first, it was nothing more than a backyard toy, but as soon as people saw it in action, it sparked a revolution.</p>
+                <p>Within a few years, go-kart racing spread like wildfire across the United States and Europe, evolving from a simple hobby into a competitive motorsport. Today, karting is not only an exciting pastime but also the foundation of professional racing.</p>
+            </div>
+            <h3 onclick="toggleContent('excitement')" style="cursor: pointer;">🏁 Why is Karting So Exciting?</h3>
+            <div id="excitement" style="display: none;">
+                <ul>
+                    <li>✅ Lightweight and Fast – With a weight of only 70-150 kg, karts accelerate quickly and feel incredibly responsive.</li>
+                    <li>✅ Low Center of Gravity – Unlike traditional cars, a go-kart's low-slung design keeps it planted on the track, making cornering a thrilling challenge.</li>
+                    <li>✅ Direct Steering & Instant Feedback – There are no suspension systems, so drivers feel every inch of the road, requiring precise control.</li>
+                    <li>✅ Affordable Racing – Unlike Formula 1, where cars cost millions, karting provides an accessible way to experience true motorsport action.</li>
+                </ul>
+                <p>Many racing drivers say, "If you can master a go-kart, you can drive anything."</p>
+            </div>
+            <h3 onclick="toggleContent('path')" style="cursor: pointer;">🚀 From Go-Karts to Formula 1: The Path to Greatness</h3>
+            <div id="path" style="display: none;">
+                <p>Some of the greatest F1 champions started their journey in karting:</p>
+                <ul>
+                    <li>🏆 Lewis Hamilton – The 7-time F1 champion got his first kart at age 6 and was beating older kids in races by age 8.</li>
+                    <li>🏆 Max Verstappen – Started karting at just 4 years old and was winning international championships before becoming the youngest F1 driver ever.</li>
+                    <li>🏆 Michael Schumacher – The legendary 7-time champion honed his precision and technique on karting circuits in Germany.</li>
+                </ul>
+                <p>Karting teaches racecraft, braking techniques, overtaking skills, and vehicle control, all of which are essential for success in Formula 1, Le Mans, or even GT racing.</p>
+                <p>💡 Fun Fact: Ayrton Senna, one of the most legendary F1 drivers, once said: "Karting was the purest racing experience I ever had. No politics, just pure driving."</p>
+            </div>
+            <h3 onclick="toggleContent('interactive')" style="cursor: pointer;">🕹️ Interactive Fun!</h3>
+            <div id="interactive" style="display: none;">
+                <ul>
+                    <li>🎬 Watch: "How Go-Karts Evolved Into a Global Motorsport" (Short Video)</li>
+                    <li>🧩 Quiz: "Could You Be the Next Karting Champion?"</li>
+                    <li>📍 Explore: "360° Virtual Tour of a Professional Karting Track"</li>
+                </ul>
+            </div>
+        </div>
+        <div id="karting-techniques-content" style="display: block; padding: 20px; background-color: rgba(0, 0, 0, 0.8); color: #fff; flex-grow: 1;">
+            <h2>Objective: Help beginners master essential driving techniques and avoid common mistakes.</h2>
+            <h3 onclick="toggleContent('driving-position')" style="cursor: pointer;">1️⃣ Proper Driving Position & Posture</h3>
+            <div id="driving-position">
+                <p>Having the right posture ensures better control, balance, and reaction time.</p>
+                <ul>
+                    <li>✅ Correct Posture:
+                        <ul>
+                            <li>Sit deep into the seat with your back fully against the seatback.</li>
+                            <li>Grip the steering wheel firmly with both hands at the "10 and 2" position (as if on a clock).</li>
+                            <li>Keep arms slightly bent, allowing flexibility for steering control.</li>
+                            <li>Feet placement:
+                                <ul>
+                                    <li>Right foot → Accelerator (Throttle)</li>
+                                    <li>Left foot → Brake (Avoid using both feet simultaneously!)</li>
+                                </ul>
+                            </li>
+                            <li>Head position: Look far ahead, not just at the kart in front of you.</li>
+                        </ul>
+                    </li>
+                    <li>🎬 Tip: Watch onboard videos of professional karting races to observe their posture!</li>
+                </ul>
+                <img src="pics/18731741030748_.pic_hd.jpg" alt="Proper Driving Position & Posture" style="width: 50%; margin-top: 10px;">
+            </div>
+            <h3 onclick="toggleContent('acceleration-braking')" style="cursor: pointer;">2️⃣ Acceleration & Braking Techniques</h3>
+            <div id="acceleration-braking" style="display: none;">
+                <p>Proper throttle and brake control is key to smooth and fast driving.</p>
+                <ul>
+                    <li>✅ How to Accelerate Efficiently:
+                        <ul>
+                            <li>Gradually apply the throttle when exiting corners; never floor it suddenly.</li>
+                            <li>Avoid wheelspin! Sudden acceleration can cause the rear wheels to lose grip.</li>
+                            <li>Use full throttle only on straights, but ensure you have control before doing so.</li>
+                        </ul>
+                    </li>
+                    <li>✅ Braking Tips for Maximum Control:
+                        <ul>
+                            <li>NEVER brake and accelerate at the same time (braking while pressing the gas causes instability).</li>
+                            <li>Brake before entering a turn, not in the middle of it.</li>
+                            <li>Use progressive braking: Apply the brake smoothly and release it gradually.</li>
+                            <li>Avoid locking the wheels by braking too hard—locked wheels cause skidding!</li>
+                        </ul>
+                    </li>
+                    <li>🎬 Game Idea: "Test Your Braking Reflexes!" (A mini-game where players must react quickly to sudden stop signals)</li>
+                    <a href="braking-game.html" style="display: block; text-align: center; margin-top: 10px;">
+                        <img src="pics/截屏2025-03-04 下午5.46.13.png" alt="Braking Game Icon" style="width: 50px; height: 50px;">
+                        <p>Play the Braking Reflex Game!</p>
+                    </a>
+                </ul>
+            </div>
+            <h3 onclick="toggleContent('steering-cornering')" style="cursor: pointer;">3️⃣ Basic Steering & Cornering Techniques</h3>
+            <div id="steering-cornering" style="display: none;">
+                <ul>
+                    <li>✅ How to Take a Corner Properly:
+                        <ul>
+                            <li>Brake BEFORE entering the turn, not during it.</li>
+                            <li>Turn smoothly and progressively; avoid jerky movements.</li>
+                            <li>Follow the racing line:
+                                <ul>
+                                    <li>Wide entry → Tight apex (inside of the curve) → Wide exit</li>
+                                </ul>
+                            </li>
+                            <li>Accelerate only after passing the corner apex to maintain stability.</li>
+                        </ul>
+                    </li>
+                    <li>❌ Common Mistakes to Avoid:
+                        <ul>
+                            <li>Turning too early → You might run wide and lose speed.</li>
+                            <li>Applying throttle too early → Causes the rear to slide out.</li>
+                            <li>Braking in the middle of the turn → Reduces grip and control.</li>
+                        </ul>
+                    </li>
+                    <li>🎬 GIF Comparison: "Correct vs. Wrong Cornering Techniques"</li>
+                </ul>
+                <div style="display: flex; justify-content: center; align-items: center; gap: 20px;">
+                    <div style="text-align: center;">
+                        <img src="pics/tech-turn.gif" alt="Correct Cornering Technique" 
+                             style="width: 100%; max-width: 400px; height: auto;">
+                        <p style="font-weight: bold;">Correct</p>
+                    </div>
+                    <div style="text-align: center;">
+                        <img src="pics/turn-wrong.gif" alt="Wrong Cornering Technique" 
+                             style="width: 100%; max-width: 400px; height: auto;">
+                        <p style="font-weight: bold;">Wrong</p>
+                    </div>
+                </div>
+            </div>
+            <h3 onclick="toggleContent('avoid-spinouts')" style="cursor: pointer;">4️⃣ How to Avoid Spin-Outs (Losing Control)</h3>
+            <div id="avoid-spinouts" style="display: none;">
+                <p>Losing control and spinning out (also known as oversteering) is a common mistake for beginners.</p>
+                <ul>
+                    <li>✅ How to Prevent Spin-Outs:
+                        <ul>
+                            <li>Avoid braking too late into a corner—this causes the rear to slide.</li>
+                            <li>Do not steer too aggressively—smooth steering keeps balance.</li>
+                            <li>If you feel the rear sliding, counter-steer gently (turn in the direction of the slide).</li>
+                            <li>Keep calm—don't overcorrect, as this can make the spin worse.</li>
+                        </ul>
+                    </li>
+                    <li>🎬 Pro Tip: Watch how F1 and karting pros recover from skids in wet conditions!</li>
+                </ul>
+                <img src="pics/f1-drift.gif" alt="F1 Drift Recovery" style="width: 50%; margin-top: 10px;">
+            </div>
+            <h3 onclick="toggleContent('overtake-safely')" style="cursor: pointer;">5️⃣ How to Overtake Safely & Effectively</h3>
+            <div id="overtake-safely" style="display: none;">
+                <p>Karting is all about close racing—knowing how to overtake is crucial.</p>
+                <ul>
+                    <li>✅ Smart Overtaking Strategies:
+                        <ul>
+                            <li>Plan ahead—identify weak spots in the driver ahead (e.g., slow exit from corners).</li>
+                            <li>Use the slipstream—follow closely on a straight, then slingshot past.</li>
+                            <li>Late braking technique—brake slightly later than your opponent but without losing control.</li>
+                            <li>Side-by-side approach—get beside the other kart before the turn to claim the racing line.</li>
+                            <li>Defend wisely—block only once to avoid penalties and keep racing fair.</li>
+                        </ul>
+                    </li>
+                    <li>❌ What NOT to Do:
+                        <ul>
+                            <li>Dive-bombing (late braking too aggressively, forcing others off-track).</li>
+                            <li>Contact racing (hitting others to gain position—this can lead to penalties).</li>
+                            <li>Blocking multiple times (only one move is allowed in competitive racing).</li>
+                        </ul>
+                    </li>
+                    <li>🎬 Video Idea: "Best Overtakes in Karting History!"</li>
+                </ul>
+                <iframe width="560" height="315" src="https://www.youtube.com/embed/dzsOIXQZAqs" title="Best Overtakes in Karting History" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen style="width: 100%; margin-top: 10px;"></iframe>
+            </div>
+            <h3 onclick="toggleContent('interactive-features')" style="cursor: pointer;">🎮 Interactive Features & Games</h3>
+            <div id="interactive-features" style="display: none;">
+                <ul>
+                    <li>✅ GIF Comparisons – Show proper vs. incorrect techniques.</li>
+                    <li>✅ Reaction Speed Game – Test how fast you can respond to braking signals.</li>
+                    <li>✅ Overtaking Quiz – "When is the best time to overtake?" (Players choose different scenarios).</li>
+                </ul>
+            </div>
+            <h3 onclick="toggleContent('conclusion')" style="cursor: pointer;">🏁 Conclusion</h3>
+            <div id="conclusion" style="display: none;">
+                <p>Mastering these basic karting techniques will make any beginner faster, smoother, and safer on track. Want to take your karting skills to the next level? Try advanced techniques like trail braking, weight shifting, and wet track racing!</p>
+                <p>💬 What's next? Ready to practice your skills on a real track? 🏎️💨</p>
+            </div>
+        </div>
+        <div id="types-of-karting-content" style="display: none; padding: 20px; background-color: rgba(0, 0, 0, 0.8); color: #fff; flex-grow: 1;">
+            <h2>Types of Karting – An Exciting Guide to Different Kart Racing Styles 🏎️🔥</h2>
+            <p>Karting is an exhilarating motorsport that serves as the foundation for many professional racing careers. Whether you're a beginner looking for a casual thrill or an aspiring racer seeking a competitive edge, there's a karting style suited for you. Let's dive into the various types of karting and explore exciting interactive projects to make your learning experience more fun! 🚀</p>
+            <h3 onclick="toggleContent('indoor-karting')" style="cursor: pointer;">🏁 1. Indoor Karting – The Perfect Entry-Level Experience</h3>
+            <div id="indoor-karting" style="display: none;">
+                <p>Overview: Indoor karting is ideal for beginners and casual racers. These facilities feature electric or gas-powered karts on controlled tracks, ensuring a safe and fun experience. The smooth track surfaces, sharp turns, and controlled environments make it a great place to practice racing techniques without worrying about weather conditions.</p>
+                <ul>
+                    <li>✔ Short tracks with tight corners 🏎️</li>
+                    <li>✔ Electric or gas-powered rental karts 🔋</li>
+                    <li>✔ Ideal for group racing and corporate events 🏆</li>
+                </ul>
+                <p>🎮 Interactive Project: Reaction Time Test</p>
+                <p>💡 Challenge yourself with a reaction time test, just like a real karting race! Click the button below as soon as the "GO!" signal appears and see how fast your reflexes are.</p>
+                <button onclick="startReactionTimeTest()">Start Reaction Time Test</button>
+            </div>
+            <h3 onclick="toggleContent('outdoor-karting')" style="cursor: pointer;">🌍 2. Outdoor Karting – The Real Racing Feel</h3>
+            <div id="outdoor-karting" style="display: none;">
+                <p>Overview: Outdoor karting takes the excitement to another level with longer and more technical tracks. These tracks simulate real racing environments with elevation changes, variable weather conditions, and high-speed straights.</p>
+                <ul>
+                    <li>✔ Longer tracks with natural elements (hills, bumps) 🏔️</li>
+                    <li>✔ Weather-dependent conditions ☀️🌧️</li>
+                    <li>✔ Speeds reaching 70+ mph (112+ km/h) 🚀</li>
+                </ul>
+                <p>🎯 Interactive Project: Weather Strategy Challenge</p>
+                <p>💡 In outdoor karting, drivers must adapt to weather conditions. Try this challenge—match the best karting strategy to different weather conditions!</p>
+                <p>🛞 Example Question:</p>
+                <p>It starts raining during your outdoor karting session. What should you do?</p>
+                <ul>
+                    <li>A) Keep the same speed and ignore the rain</li>
+                    <li>B) Use smoother steering and braking ✅</li>
+                    <li>C) Speed up on wet patches for extra grip</li>
+                </ul>
+            </div>
+            <h3 onclick="toggleContent('sprint-karting')" style="cursor: pointer;">🔥 3. Sprint Karting – High-Speed Competitive Racing</h3>
+            <div id="sprint-karting" style="display: none;">
+                <p>Overview: Sprint karting is the most common form of competitive kart racing. It features short, high-intensity races on closed-circuit tracks, with classes based on engine power and age categories. Many famous F1 drivers, including Lewis Hamilton and Max Verstappen, started their careers in sprint karting.</p>
+                <ul>
+                    <li>✔ Short races (typically 8-15 laps) 🏎️</li>
+                    <li>✔ Karts with 2-stroke or 4-stroke engines ⚙️</li>
+                    <li>✔ Requires precise cornering and overtaking skills 🎯</li>
+                </ul>
+                <p>🏎️ Interactive Project: Racing Line Optimization</p>
+                <p>💡 Learn how to take corners like a pro! Drag and drop different racing lines on a sample track to see which one results in the fastest lap time.</p>
+                <button onclick="window.location.href='racing-line-challenge.html'" style="display: block; margin: 10px auto; padding: 10px 20px; background-color: #ff0000; color: #fff; border: none; border-radius: 5px; cursor: pointer; font-size: 1.2em;">Try the Racing Line Challenge</button>
+            </div>
+            <h3 onclick="toggleContent('endurance-karting')" style="cursor: pointer;">🌪️ 4. Endurance Karting – The Ultimate Test of Stamina</h3>
+            <div id="endurance-karting" style="display: none;">
+                <p>Overview: Endurance karting focuses on long-distance races that test both speed and strategy. Races can last anywhere from 30 minutes to 24 hours, requiring driver swaps, fuel management, and consistent lap times.</p>
+                <ul>
+                    <li>✔ Races lasting from 30 minutes to 24 hours ⏳</li>
+                    <li>✔ Requires teamwork and pit stops 👥</li>
+                    <li>✔ Fuel efficiency and consistency are key ⛽</li>
+                </ul>
+                <p>⏳ Interactive Project: Pit Stop Challenge</p>
+                <p>💡 In endurance racing, efficient pit stops are crucial. Can you swap tires and refuel the kart in record time? Click as fast as possible to complete your pit stop challenge!</p>
+                <button onclick="startPitStopChallenge()">Start Pit Stop Challenge</button>
+            </div>
+            <h3 onclick="toggleContent('dirt-karting')" style="cursor: pointer;">🛞 5. Dirt Karting – Off-Road Thrills</h3>
+            <div id="dirt-karting" style="display: none;">
+                <p>Overview: Dirt karting takes racing off the asphalt and onto loose surfaces like dirt and gravel. These karts feature special tires and suspension setups to handle the rough terrain.</p>
+                <ul>
+                    <li>✔ Tracks made of dirt, clay, or gravel 🏜️</li>
+                    <li>✔ High-speed drifting and sliding 🔄</li>
+                    <li>✔ Requires precise throttle control 🎛️</li>
+                </ul>
+                <p>🎢 Interactive Project: Drifting Simulator</p>
+                <p>💡 Test your drifting skills on a virtual dirt karting track! Try to balance throttle control and steering to keep your kart on the racing line.</p>
+                <button onclick="tryDriftingSimulator()">Try the Drifting Simulator</button>
+            </div>
+            <h3 onclick="toggleContent('superkarting')" style="cursor: pointer;">🔝 6. Superkarting – The Fastest Karts in the World</h3>
+            <div id="superkarting" style="display: none;">
+                <p>Overview: Superkarts are the Formula 1 of karting, reaching speeds of up to 150 mph (240 km/h)! These high-performance machines are designed for long circuits and feature aerodynamic bodywork for enhanced downforce.</p>
+                <ul>
+                    <li>✔ 2-stroke engines up to 250cc 💨</li>
+                    <li>✔ Capable of speeds over 150 mph (240 km/h) 🚀</li>
+                    <li>✔ Used on large circuits like Silverstone and Monza 🏁</li>
+                </ul>
+                <p>🏎️ Interactive Project: Speed Comparison</p>
+                <p>💡 How fast are superkarts compared to other vehicles? Drag and compare different vehicles (bicycles, normal karts, F1 cars) on a speed graph.</p>
+                <button onclick="compareSpeeds()">Compare Speeds</button>
+            </div>
+            <h3 onclick="toggleContent('fun-facts')" style="cursor: pointer;">🏆 Bonus: Fun Karting Facts!</h3>
+            <div id="fun-facts" style="display: none;">
+                <ul>
+                    <li>📌 The fastest kart ever recorded hit 161 mph (259 km/h)!</li>
+                    <li>📌 F1 legend Ayrton Senna started his career in karting and called it "pure racing"!</li>
+                    <li>📌 The famous Mario Kart game series has sold over 160 million copies worldwide!</li>
+                </ul>
+            </div>
+            <h3 onclick="toggleContent('quiz')" style="cursor: pointer;">🚗 Ready to Test Your Karting Knowledge?</h3>
+            <div id="quiz" style="display: none;">
+                <p>💡 Now that you've learned about different karting types, why not test your skills? Take our Ultimate Karting Quiz and see if you have what it takes to be a karting champion!</p>
+                <button onclick="takeKartingQuiz()">Take the Karting Quiz</button>
+            </div>
+            <p>Conclusion: Karting is an incredible motorsport with diverse styles to explore, from indoor tracks to high-speed superkarting. Whether you're a beginner or an adrenaline junkie, there's a karting type perfect for you! Ready to hit the track? 🏁🔥</p>
+        </div>
+    </div>
+
+    <div id="drag-compare-container" style="text-align: center; font-family: Arial, sans-serif;">
+        <h2>Kart vs F1 Size Comparison</h2>
+        <div class="comparison-container" style="position: relative; width: 80%; max-width: 800px; margin: 20px auto; overflow: hidden;">
+            <img src="racing-faye/karting.jpg" class="kart" style="width: 100%; position: absolute; top: 0; clip-path: inset(0 50% 0 0);">
+            <img src="racing-faye/pics/ferrari-3-4.jpg" class="f1" style="width: 100%; position: absolute; top: 0; z-index: -1;">
+            <div class="comparison-slider" id="slider" style="position: absolute; top: 0; left: 50%; width: 5px; height: 100%; background: red; cursor: ew-resize;"></div>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script>
+        // 初始化地图
+        var map = L.map('map', {
+            center: [37.8, -96],
+            zoom: 4,
+            dragging: true
+        });
+
+        // 添加地图图层
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 18,
+            attribution: '© OpenStreetMap'
+        }).addTo(map);
+
+        // 添加大头针标记
+        var kartingLocations = [
+            { lat: 34.0522, lng: -118.2437, name: "Los Angeles Karting Track" },
+            { lat: 40.7128, lng: -74.0060, name: "New York Karting Track" },
+            { lat: 41.8781, lng: -87.6298, name: "Chicago Karting Track" },
+            { lat: 30.1775, lng: -95.2044, name: "Speedsportz Racing Park" },
+            { lat: 33.0645, lng: -96.2313, name: "Dallas Karting Complex" },
+            { lat: 33.0535, lng: -97.4708, name: "KAM Kartway" },
+            { lat: 30.1346, lng: -97.6359, name: "COTA Karting" }
+        ];
+
+        kartingLocations.forEach(function(location) {
+            var googleMapsLink = `https://www.google.com/maps/search/?api=1&query=${location.lat},${location.lng}`;
+            L.marker([location.lat, location.lng]).addTo(map)
+                .bindPopup(`<a href="${googleMapsLink}" target="_blank">${location.name}</a>`);
+        });
+
+        // 改变地图透明度
+        map.on('zoomstart', function() {
+            document.getElementById('map').style.opacity = 1;
+        });
+
+        map.on('zoomend', function() {
+            document.getElementById('map').style.opacity = 0.8;
+        });
+
+        document.querySelector('a[href="#karting-basics"]').addEventListener('click', function(event) {
+            event.preventDefault();
+            document.getElementById('map').style.display = 'none';
+            document.getElementById('karting-basics-content').style.display = 'block';
+        });
+
+        document.querySelector('a[href="#karting-techniques"]').addEventListener('click', function(event) {
+            event.preventDefault();
+            document.getElementById('map').style.display = 'none';
+            document.getElementById('karting-basics-content').style.display = 'none';
+            document.getElementById('karting-techniques-content').style.display = 'block';
+        });
+
+        document.querySelector('a[href="#types-of-karting"]').addEventListener('click', function(event) {
+            event.preventDefault();
+            document.getElementById('map').style.display = 'none';
+            document.getElementById('karting-basics-content').style.display = 'none';
+            document.getElementById('karting-techniques-content').style.display = 'none';
+            document.getElementById('types-of-karting-content').style.display = 'block';
+        });
+
+        function toggleContent(id) {
+            var content = document.getElementById(id);
+            if (content.style.display === "none") {
+                content.style.display = "block";
+            } else {
+                content.style.display = "none";
+            }
+        }
+
+        document.querySelector('a[href="#drag-compare"]').addEventListener('click', function(event) {
+            event.preventDefault();
+            document.getElementById('map').style.display = 'none';
+            document.getElementById('karting-basics-content').style.display = 'none';
+            document.getElementById('karting-techniques-content').style.display = 'none';
+            document.getElementById('drag-compare-container').scrollIntoView({ behavior: 'smooth' });
+        });
+
+        document.getElementById("driving-position").style.display = "block";
+    </script>
+</body>
+</html> 

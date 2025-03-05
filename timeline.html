@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Timeline</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@700&display=swap');
+        body {
+            font-family: 'Roboto', sans-serif;
+            color: #fff;
+            background-color: #111;
+            padding: 20px;
+        }
+        h1, h2 {
+            color: #f00;
+            text-align: center;
+            font-family: 'Roboto', sans-serif;
+        }
+        .featured-articles, .other-articles, .video-section {
+            margin-bottom: 40px;
+            background-color: #222;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+        .featured-articles img, .other-articles img {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            margin: 10px 0;
+            padding: 10px;
+            background-color: #333;
+            border-radius: 8px;
+            transition: background-color 0.3s;
+        }
+        li:hover {
+            background-color: #444;
+        }
+        iframe {
+            display: block;
+            margin: 0 auto;
+            border-radius: 8px;
+        }
+        .timeline-section {
+            position: relative;
+            padding: 40px 0;
+        }
+        .timeline-line {
+            display: none;
+        }
+        .milestone {
+            position: relative;
+            width: 45%;
+            padding: 20px;
+            background-color: #222;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            margin-bottom: 20px;
+        }
+        .milestone:nth-child(odd) {
+            left: 0;
+        }
+        .milestone:nth-child(even) {
+            left: 55%;
+        }
+        .milestone h3 {
+            cursor: pointer;
+            color: #f00;
+            font-family: Arial, sans-serif;
+        }
+        .milestone::before {
+            display: none;
+        }
+        .milestone:nth-child(odd)::before {
+            left: 100%;
+        }
+        .milestone:nth-child(even)::before {
+            right: 100%;
+        }
+        .milestone::after {
+            content: none;
+        }
+        .milestone:nth-child(odd)::after {
+            right: -30px;
+        }
+        .milestone:nth-child(even)::after {
+            left: -30px;
+        }
+        .details p {
+            font-family: Arial, sans-serif;
+        }
+        .featured-articles article {
+            display: flex;
+            align-items: center;
+        }
+        .featured-articles img {
+            margin-right: 20px;
+        }
+    </style>
+</head>
+<body>
+    <a href="index.html" style="position: absolute; left: 20px; top: 20px; text-decoration: none; color: #f00; font-size: 24px;">&#x2190; Home</a>
+    <a href="racing-quiz.html" class="start-button">Racing Quiz</a>
+    <h1>Interactive Timeline</h1>
+    <div class="video-section">
+        <h2>Video</h2>
+        <iframe width="560" height="315" src="https://www.youtube.com/embed/3o0l6mALt9E" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    </div>
+    <div class="timeline-section">
+        <h2>Timeline: From Karting to F1</h2>
+        <div class="timeline-line"></div>
+        <div class="milestone">
+            <h3 onclick="toggleDetails('details1')">Ages 6-10 – Karting</h3>
+            <div id="details1" class="details" style="display: none;">
+                <p>- Young drivers start in local karting competitions, learning basic racing skills.</p>
+                <p>- Compete in national and international karting championships (e.g., CIK-FIA).</p>
+            </div>
+        </div>
+        <div class="milestone">
+            <h3 onclick="toggleDetails('details2')">Ages 11-15 – Advanced Karting & Junior Formula</h3>
+            <div id="details2" class="details" style="display: none;">
+                <p>- Move up to higher-level karting competitions (e.g., European Championships).</p>
+                <p>- Some transition into entry-level single-seater racing (e.g., Formula 4).</p>
+            </div>
+        </div>
+        <div class="milestone">
+            <h3 onclick="toggleDetails('details3')">Ages 15-18 – Formula 4 to Formula 3</h3>
+            <div id="details3" class="details" style="display: none;">
+                <p>- Join Formula 4 (F4) in national series (e.g., Italian F4, British F4).</p>
+                <p>- Progress to Formula 3 (F3), racing in international series.</p>
+            </div>
+        </div>
+        <div class="milestone">
+            <h3 onclick="toggleDetails('details4')">Ages 18-21 – Formula 2 (F2) & F1 Testing</h3>
+            <div id="details4" class="details" style="display: none;">
+                <p>- Compete in Formula 2 (F2), the final step before F1.</p>
+                <p>- Get F1 test opportunities and enter driver academies.</p>
+            </div>
+        </div>
+        <div class="milestone">
+            <h3 onclick="toggleDetails('details5')">Ages 20-25 – Formula 1 Debut</h3>
+            <div id="details5" class="details" style="display: none;">
+                <p>- Earn an FIA Super License.</p>
+                <p>- Join an F1 team as a reserve driver or secure a race seat.</p>
+                <p>- Begin F1 career, aiming for podiums and championships.</p>
+            </div>
+        </div>
+    </div>
+    <div class="featured-articles">
+        <h2>Featured Articles</h2>
+        <article>
+            <img src="pics/micro-max-crash-24-10-2019-12-01-022.jpg" alt="Featured Article 1" style="width: 16.67%; height: auto;">
+            <div>
+                <h3><a href="https://www.grandprix247.com/2023/10/28/karting-to-formula-one-explained/" target="_blank">Karting to Formula One Explained</a></h3>
+                <p>This article provides an overview of how karting serves as the initial step for many aspiring F1 drivers, highlighting its role in developing driving skills and racecraft.</p>
+            </div>
+        </article>
+        <article>
+            <img src="pics/GettyImages-2107967602 (1).avif" alt="Featured Article 2" style="width: 16.67%; height: auto;">
+            <div>
+                <h3><a href="https://www.formula1.com/en/latest/article/the-beginners-guide-to-formula-2.1qUx4JXhT6O6T29wCwitu4" target="_blank">The Beginner's Guide to Formula 2</a></h3>
+                <p>Explore how Formula 2 serves as the ultimate training ground for aspiring F1 drivers, offering insights into its structure and significance.</p>
+            </div>
+        </article>
+    </div>
+    <div class="other-articles">
+        <h2>Other Articles</h2>
+        <ul>
+            <li>Article Title 3</li>
+            <li>Article Title 4</li>
+            <li>Article Title 5</li>
+            <li>Article Title 6</li>
+            <li>Article Title 7</li>
+        </ul>
+    </div>
+    <script>
+        function toggleDetails(id) {
+            var details = document.getElementById(id);
+            if (details.style.display === "none") {
+                details.style.display = "block";
+            } else {
+                details.style.display = "none";
+            }
+        }
+    </script>
+</body>
+</html> 

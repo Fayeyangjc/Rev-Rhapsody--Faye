@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Timed Challenge Mode</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            background-color: #000;
+            color: #fff;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
+        header {
+            background-color: #111;
+            padding: 20px;
+            text-align: center;
+            border-bottom: 2px solid #f00;
+        }
+        header h1 {
+            color: #f00;
+            font-size: 2.5em;
+        }
+        .timer {
+            font-size: 3em;
+            margin: 20px 0;
+            color: #f00;
+        }
+        .question {
+            background-color: #222;
+            padding: 20px;
+            margin: 20px;
+            border-radius: 8px;
+            border-left: 5px solid #f00;
+        }
+        .question h2 {
+            color: #f00;
+        }
+        .answers {
+            list-style-type: none;
+            padding: 0;
+        }
+        .answers li {
+            background-color: #333;
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .answers li:hover {
+            background-color: #444;
+        }
+        .bonus {
+            color: #0f0;
+            font-size: 1.2em;
+            margin-top: 10px;
+        }
+        .back-link {
+            color: #f00;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 20px;
+        }
+        .f1-lights {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+        }
+        .light {
+            width: 30px;
+            height: 30px;
+            background-color: #333;
+            border-radius: 50%;
+            margin: 0 5px;
+            transition: background-color 0.5s;
+        }
+        .light.on {
+            background-color: #f00;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Timed Challenge Mode</h1>
+    </header>
+    <main>
+        <button id="start-quiz" style="background-color: #f00; color: #fff; padding: 10px 20px; border: none; border-radius: 5px; font-size: 1.2em; cursor: pointer;">Start Quiz</button>
+        <div id="quiz-content" style="display: none;">
+            <div class="f1-lights">
+                <div class="light red"></div>
+                <div class="light red"></div>
+                <div class="light red"></div>
+                <div class="light red"></div>
+                <div class="light red"></div>
+            </div>
+            <section class="question" id="question-1">
+                <h2>What is the top speed of a Formula 1 car?</h2>
+                <ul class="answers">
+                    <li onclick="checkAnswer(this, false)">300 km/h</li>
+                    <li onclick="checkAnswer(this, true)">350 km/h</li>
+                    <li onclick="checkAnswer(this, false)">400 km/h</li>
+                    <li onclick="checkAnswer(this, false)">450 km/h</li>
+                </ul>
+                <div class="bonus">Fast Answer Bonus: +10 Points!</div>
+                <div id="correct-answer-1" style="display: none; color: #0f0;">Correct Answer: 350 km/h</div>
+                <button onclick="seeAnswer(1)">See Answer</button>
+                <button onclick="skipQuestion(1)">Skip (Retire)</button>
+            </section>
+            <section class="question" id="question-2" style="display: none;">
+                <h2>Who holds the record for the most F1 World Championships?</h2>
+                <ul class="answers">
+                    <li onclick="checkAnswer(this, false)">Ayrton Senna</li>
+                    <li onclick="checkAnswer(this, false)">Niki Lauda</li>
+                    <li onclick="checkAnswer(this, true)">Michael Schumacher</li>
+                    <li onclick="checkAnswer(this, false)">Lewis Hamilton</li>
+                </ul>
+                <div class="bonus">Fast Answer Bonus: +10 Points!</div>
+                <div id="correct-answer-2" style="display: none; color: #0f0;">Correct Answer: Michael Schumacher</div>
+                <button onclick="seeAnswer(2)">See Answer</button>
+                <button onclick="skipQuestion(2)">Skip (Retire)</button>
+            </section>
+            <section class="question" id="question-3" style="display: none;">
+                <h2>Which country hosts the Monaco Grand Prix?</h2>
+                <ul class="answers">
+                    <li onclick="checkAnswer(this, false)">Italy</li>
+                    <li onclick="checkAnswer(this, false)">France</li>
+                    <li onclick="checkAnswer(this, true)">Monaco</li>
+                    <li onclick="checkAnswer(this, false)">Spain</li>
+                </ul>
+                <div class="bonus">Fast Answer Bonus: +10 Points!</div>
+                <div id="correct-answer-3" style="display: none; color: #0f0;">Correct Answer: Monaco</div>
+                <button onclick="seeAnswer(3)">See Answer</button>
+                <button onclick="skipQuestion(3)">Skip (Retire)</button>
+            </section>
+            <a href="racing-quiz.html" class="back-link">Back to Racing Quiz Features</a>
+        </div>
+        <div id="animation" style="display: none;">
+            <div id="go-animation" style="display: none;">
+                <h2 style="color: #0f0;">GO GO GO!</h2>
+                <img src="pics/starting-grid_pnkuhoz.webp" alt="Starting Grid" style="width: 200px;">
+            </div>
+            <div id="pit-stop" style="display: none;">
+                <h2>Entering Pit Stop...</h2>
+                <img src="pics/racing-pit.gif" alt="Pit Stop" style="width: 200px;">
+                <div id="pit-timer">5</div>
+            </div>
+        </div>
+    </main>
+    <script>
+        document.getElementById('start-quiz').addEventListener('click', function() {
+            document.getElementById('start-quiz').style.display = 'none';
+            document.getElementById('quiz-content').style.display = 'block';
+            startCountdown();
+        });
+
+        function startCountdown() {
+            const lights = document.querySelectorAll('.light');
+            let currentLight = 0;
+            const lightInterval = setInterval(() => {
+                if (currentLight < lights.length) {
+                    lights[currentLight].classList.add('on');
+                    currentLight++;
+                } else {
+                    clearInterval(lightInterval);
+                    const randomDelay = Math.random() * 2800 + 200;
+                    setTimeout(() => {
+                        lights.forEach(light => light.classList.remove('on'));
+                        if (!answered) {
+                            lockAnswers();
+                            showPitStop();
+                        }
+                    }, randomDelay);
+                }
+            }, 1000);
+        }
+
+        function lockAnswers() {
+            const answers = document.querySelectorAll('#question-' + currentQuestion + ' .answers li');
+            answers.forEach(answer => answer.style.pointerEvents = 'none');
+            document.getElementById('correct-answer-' + currentQuestion).style.display = 'block';
+        }
+
+        let currentQuestion = 1;
+        let answered = false;
+
+        function checkAnswer(element, isCorrect) {
+            if (!answered) {
+                answered = true;
+                lockAnswers();
+                if (isCorrect) {
+                    showGoAnimation();
+                } else {
+                    showPitStop();
+                }
+            }
+        }
+
+        function showGoAnimation() {
+            document.getElementById('quiz-content').style.display = 'none';
+            document.getElementById('animation').style.display = 'block';
+            document.getElementById('go-animation').style.display = 'block';
+            setTimeout(() => {
+                document.getElementById('go-animation').style.display = 'none';
+                nextQuestion();
+            }, 3000);
+        }
+
+        function showPitStop() {
+            document.getElementById('quiz-content').style.display = 'none';
+            document.getElementById('animation').style.display = 'block';
+            document.getElementById('pit-stop').style.display = 'block';
+            document.getElementById('correct-answer-' + currentQuestion).style.display = 'block';
+            document.getElementById('story-' + currentQuestion).style.display = 'block';
+            let pitTime = 5;
+            const pitInterval = setInterval(() => {
+                pitTime--;
+                document.getElementById('pit-timer').textContent = pitTime;
+                if (pitTime <= 0) {
+                    clearInterval(pitInterval);
+                    nextQuestion();
+                }
+            }, 1000);
+        }
+
+        function nextQuestion() {
+            document.getElementById('animation').style.display = 'none';
+            document.getElementById('question-' + currentQuestion).style.display = 'none';
+            currentQuestion++;
+            answered = false;
+            if (document.getElementById('question-' + currentQuestion)) {
+                document.getElementById('question-' + currentQuestion).style.display = 'block';
+                document.getElementById('quiz-content').style.display = 'block';
+                startCountdown();
+            } else {
+                alert('Quiz Completed!');
+                document.getElementById('quiz-content').style.display = 'none';
+            }
+        }
+
+        function seeAnswer(questionNumber) {
+            document.getElementById('correct-answer-' + questionNumber).style.display = 'block';
+        }
+
+        function skipQuestion(questionNumber) {
+            document.getElementById('question-' + questionNumber).style.display = 'none';
+            nextQuestion();
+        }
+
+        // Add stories for each question
+        const stories = {
+            1: "The top speed of a Formula 1 car is around 350 km/h. This speed is achieved on tracks with long straights, like Monza in Italy.",
+            2: "Michael Schumacher holds the record for the most F1 World Championships, with seven titles. He is considered one of the greatest F1 drivers of all time.",
+            3: "The Monaco Grand Prix is one of the most prestigious races in the world, held on the narrow streets of Monaco. It's known for its glamour and challenging circuit."
+        };
+
+        // Add story elements to each question
+        document.querySelectorAll('.question').forEach((question, index) => {
+            const storyElement = document.createElement('div');
+            storyElement.id = 'story-' + (index + 1);
+            storyElement.style.display = 'none';
+            storyElement.style.color = '#ccc';
+            storyElement.textContent = stories[index + 1];
+            question.appendChild(storyElement);
+        });
+    </script>
+</body>
+</html> 
